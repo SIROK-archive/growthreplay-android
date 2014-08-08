@@ -1,6 +1,8 @@
 package com.growthreplay;
 
-public class GrowthReplayException extends RuntimeException {
+import com.growthbeat.GrowthbeatException;
+
+public class GrowthReplayException extends GrowthbeatException {
 
 	private static final long serialVersionUID = 1L;
 
