@@ -10,7 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.growthreplay.Preference;
+import com.growthreplay.GrowthReplay;
 import com.growthreplay.utils.DeviceUtils;
 
 public class Client extends Model {
@@ -53,7 +53,7 @@ public class Client extends Model {
 
 		JSONObject jsonObject = post("v2", "authorize", params);
 		setJsonObject(jsonObject);
-		Preference.getInstance().saveClient(this);
+		GrowthReplay.getInstance().getPreference().saveClient(this);
 
 		return this;
 	}

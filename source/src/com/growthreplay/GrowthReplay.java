@@ -33,6 +33,8 @@ public class GrowthReplay {
 		}
 	};
 
+	private final Preference preference = new Preference();
+
 	private Context context = null;
 	private int applicationId;
 	private String secret;
@@ -52,7 +54,7 @@ public class GrowthReplay {
 		this.applicationId = applicationId;
 		this.secret = secret;
 		Logger.setDebug(debug);
-		Preference.getInstance().setContext(context);
+		this.preference.setContext(context);
 		this.recorder.setHandler(pictureHandler);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			Logger.warning("Growth Replay SDK required API Level 14 or more.");
@@ -68,7 +70,7 @@ public class GrowthReplay {
 			@Override
 			public void run() {
 
-				Client refClient = Preference.getInstance().fetchClient();
+				Client refClient = GrowthReplay.this.preference.fetchClient();
 				if (refClient == null || (refClient != null && refClient.getApplicationId() != applicationId))
 					refClient = new Client();
 
@@ -189,6 +191,10 @@ public class GrowthReplay {
 			}
 		}
 
+	}
+
+	public Preference getPreference() {
+		return preference;
 	}
 
 	static interface SavePictureHandler {
