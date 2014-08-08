@@ -10,8 +10,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
+import com.growthbeat.utils.DeviceUtils;
 import com.growthreplay.GrowthReplay;
-import com.growthreplay.utils.DeviceUtils;
 
 public class Client extends Model {
 
@@ -37,7 +39,7 @@ public class Client extends Model {
 		super();
 	}
 
-	public Client authorize(int applicationId, String secret) {
+	public Client authorize(Context context, int applicationId, String secret) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("applicationId", applicationId);
@@ -46,8 +48,8 @@ public class Client extends Model {
 		params.put("token", getToken() != null ? getToken() : null);
 
 		params.put("os", "android");
-		params.put("network", DeviceUtils.enabledWifiNetwork() ? "wifi" : "carrier");
-		params.put("memory", DeviceUtils.getAvailableMemory());
+		params.put("network", DeviceUtils.connectedToWiFi(context) ? "wifi" : "carrier");
+		params.put("memory", DeviceUtils.getAvailableMemory(context));
 		params.put("version", com.growthbeat.utils.DeviceUtils.getOsVersion());
 		params.put("model", com.growthbeat.utils.DeviceUtils.getModel());
 

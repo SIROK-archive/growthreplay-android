@@ -25,7 +25,7 @@ public class GrowthReplay {
 	private Semaphore semaphore = new Semaphore(1);
 	private CountDownLatch latch = new CountDownLatch(1);
 
-	private Recorder recorder = new Recorder();
+	private Recorder recorder = null;
 	private final SavePictureHandler pictureHandler = new SavePictureHandler() {
 		@Override
 		public void savePicture(byte[] data) {
@@ -52,6 +52,7 @@ public class GrowthReplay {
 	public GrowthReplay initialize(final Context context, final int applicationId, final String secret) {
 
 		this.context = context.getApplicationContext();
+		this.recorder = new Recorder(this.context);
 		this.applicationId = applicationId;
 		this.secret = secret;
 		// TODO set logger configuration
@@ -79,7 +80,7 @@ public class GrowthReplay {
 					semaphore.acquire();
 
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
-					refClient = refClient.authorize(applicationId, secret);
+					refClient = refClient.authorize(GrowthReplay.this.context, applicationId, secret);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", refClient.getClientId()));
 
 					final Configuration configuration = refClient.getClientConfiguration();

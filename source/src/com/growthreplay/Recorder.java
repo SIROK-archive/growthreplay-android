@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
@@ -14,13 +15,14 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.view.View;
 
+import com.growthbeat.utils.DeviceUtils;
 import com.growthreplay.GrowthReplay.SavePictureHandler;
 import com.growthreplay.model.Configuration;
 import com.growthreplay.utils.BitmapUtils;
-import com.growthreplay.utils.DeviceUtils;
 
 class Recorder {
 
+	private Context context;
 	private Activity activity;
 	private Configuration configuration;
 	private Timer timer;
@@ -30,7 +32,9 @@ class Recorder {
 
 	private SavePictureHandler handler;
 
-	public Recorder() {
+	public Recorder(Context context) {
+		super();
+		this.context = context;
 	}
 
 	public void startWidthConfiguration(Configuration configuration) {
@@ -74,16 +78,16 @@ class Recorder {
 			return;
 		}
 
-		if (!DeviceUtils.enabledWifiNetwork() || !isRec)
+		if (!DeviceUtils.connectedToWiFi(context) || !isRec)
 			return;
 
 		final View view = activity.getWindow().getDecorView().getRootView();
 		if (view == null)
 			return;
-		if (DeviceUtils.lowMemory())
+		if (DeviceUtils.isLowMemory(context))
 			return;
 
-		final Point display = DeviceUtils.getDisplaySize();
+		final Point display = DeviceUtils.getDisplaySize(context);
 		float scale = BitmapUtils.resizeScale(display.x, display.y, configuration.getScale());
 		Matrix matrix = new Matrix();
 		matrix.postScale(scale, scale);
@@ -126,7 +130,7 @@ class Recorder {
 
 	public void send(Bitmap bitmap) {
 		if (continuation) {
-			if (DeviceUtils.enabledWifiNetwork()) {
+			if (DeviceUtils.connectedToWiFi(context)) {
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				bitmap.compress(CompressFormat.JPEG, this.configuration.getCompressibility(), byteArrayOutputStream);
 				sendPicture(byteArrayOutputStream.toByteArray());
