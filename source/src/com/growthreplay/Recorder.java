@@ -69,7 +69,7 @@ class Recorder {
 			return;
 
 		if (!continuation) {
-			Logger.debug("screenshot limit size!");
+			GrowthReplay.getInstance().getLogger().debug("screenshot limit size!");
 			Recorder.this.timer.cancel();
 			return;
 		}
