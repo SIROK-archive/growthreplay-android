@@ -40,7 +40,7 @@ public class GrowthReplay {
 
 	private Context context = null;
 	private int applicationId;
-	private String secret;
+	private String credentialId;
 	private Client client = null;
 	private int pictureLimit = 0;
 	private boolean recordedCheck = true;
@@ -51,12 +51,13 @@ public class GrowthReplay {
 		return instance;
 	}
 
-	public GrowthReplay initialize(final Context context, final int applicationId, final String secret) {
+	public GrowthReplay initialize(Context context, String applicationId, String credentialId) {
 
 		this.context = context.getApplicationContext();
 		this.recorder = new Recorder(this.context);
-		this.applicationId = applicationId;
-		this.secret = secret;
+		// TODO migrate to new API
+		this.applicationId = 0;
+		this.credentialId = credentialId;
 		// TODO set logger configuration
 		this.preference.setContext(context);
 		this.recorder.setHandler(pictureHandler);
@@ -82,7 +83,7 @@ public class GrowthReplay {
 					semaphore.acquire();
 
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
-					refClient = refClient.authorize(GrowthReplay.this.context, applicationId, secret);
+					refClient = refClient.authorize(GrowthReplay.this.context, applicationId, credentialId);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", refClient.getClientId()));
 
 					final Configuration configuration = refClient.getClientConfiguration();
