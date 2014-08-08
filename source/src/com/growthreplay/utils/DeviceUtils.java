@@ -60,12 +60,4 @@ public class DeviceUtils {
 		return point;
 	}
 
-	public static String getOSVersion() {
-		return Build.VERSION.RELEASE;
-	}
-
-	public static String getDevice() {
-		return Build.MODEL;
-	}
-
 }

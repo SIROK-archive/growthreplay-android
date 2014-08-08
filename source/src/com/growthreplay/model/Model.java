@@ -42,9 +42,9 @@ import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.growthbeat.utils.IOUtils;
 import com.growthreplay.GrowthReplay;
 import com.growthreplay.GrowthReplayException;
-import com.growthreplay.utils.IOUtils;
 
 /**
  * Created by Shigeru Ogawa on 13/08/12.
@@ -134,7 +134,7 @@ public class Model {
 		URLConnection connection = null;
 		try {
 
-			connection = new URL(GrowthReplay.BASE_URL +  version + "/" + api).openConnection();
+			connection = new URL(GrowthReplay.BASE_URL + version + "/" + api).openConnection();
 			connection.setConnectTimeout(60 * 1000);
 			connection.setReadTimeout(60 * 1000);
 			connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);

@@ -48,8 +48,8 @@ public class Client extends Model {
 		params.put("os", "android");
 		params.put("network", DeviceUtils.enabledWifiNetwork() ? "wifi" : "carrier");
 		params.put("memory", DeviceUtils.getAvailableMemory());
-		params.put("version", DeviceUtils.getOSVersion());
-		params.put("model", DeviceUtils.getDevice());
+		params.put("version", com.growthbeat.utils.DeviceUtils.getOsVersion());
+		params.put("model", com.growthbeat.utils.DeviceUtils.getModel());
 
 		JSONObject jsonObject = post("v2", "authorize", params);
 		setJsonObject(jsonObject);

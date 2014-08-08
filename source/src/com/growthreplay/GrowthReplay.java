@@ -16,7 +16,6 @@ import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
 import com.growthreplay.model.Picture;
 import com.growthreplay.model.Tag;
-import com.growthreplay.utils.DeviceUtils;
 
 public class GrowthReplay {
 
@@ -117,8 +116,8 @@ public class GrowthReplay {
 	}
 
 	public void setDeviceTags() {
-		setTag("deviceModel", DeviceUtils.getDevice());
-		setTag("deviceVersion", DeviceUtils.getOSVersion());
+		setTag("deviceModel", com.growthbeat.utils.DeviceUtils.getModel());
+		setTag("deviceVersion", com.growthbeat.utils.DeviceUtils.getOsVersion());
 		setTag("os", "android");
 		setTag("sdkVersion", String.valueOf(SDK_VERSION));
 
