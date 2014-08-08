@@ -10,6 +10,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
 import com.growthbeat.CatchableThread;
+import com.growthbeat.GrowthbeatCore;
 import com.growthbeat.Logger;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
@@ -51,7 +52,7 @@ public class GrowthReplay {
 		return instance;
 	}
 
-	public GrowthReplay initialize(Context context, String applicationId, String credentialId) {
+	public void initialize(Context context, String applicationId, String credentialId) {
 
 		this.context = context.getApplicationContext();
 		this.recorder = new Recorder(this.context);
@@ -63,17 +64,29 @@ public class GrowthReplay {
 		this.recorder.setHandler(pictureHandler);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			this.logger.warning("Growth Replay SDK required API Level 14 or more.");
-			return this;
+			return;
 		}
 
-		authorize();
-		return this;
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				com.growthbeat.model.Client growthbeatClient = GrowthbeatCore.getInstance().waitClient();
+				authorize(growthbeatClient.getId());
+
+			}
+
+		}).start();
+
 	}
 
-	private void authorize() {
+	private void authorize(String growthbeatClientId) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+
+				// TODO use growthbeatClientId
 
 				Client refClient = GrowthReplay.this.preference.fetchClient();
 				if (refClient == null || (refClient != null && refClient.getApplicationId() != applicationId))
