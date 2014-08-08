@@ -30,7 +30,7 @@ public class Tag extends Model {
 		params.put("name", getName());
 		params.put("value", getValue());
 
-		JSONObject json = post("tag", params);
+		JSONObject json = post("v1", "tag", params);
 		setJson(json);
 
 		return this;

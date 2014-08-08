@@ -31,7 +31,7 @@ public class Event extends Model {
 		params.put("name", name);
 		params.put("value", getValue());
 
-		JSONObject json = post("event", params);
+		JSONObject json = post("v1", "event", params);
 		setJson(json);
 
 		return this;

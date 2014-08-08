@@ -67,7 +67,7 @@ public class Client extends Model {
 		params.put("token", getToken());
 		params.put("recordScheduleToken", getRecordScheduleToken());
 
-		post("cancel", params);
+		post("v1", "cancel", params);
 	}
 
 	public Picture savePicture(byte[] file, boolean recordedCheck) {

@@ -14,6 +14,7 @@ import com.growthbeat.Logger;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
+import com.growthreplay.model.GrowthReplayHttpClient;
 import com.growthreplay.model.Picture;
 import com.growthreplay.model.Tag;
 
@@ -33,6 +34,7 @@ public class GrowthReplay {
 		}
 	};
 
+	private final GrowthReplayHttpClient httpClient = new GrowthReplayHttpClient();
 	private final Logger logger = new Logger("Growth Replay");
 	private final Preference preference = new Preference();
 
@@ -193,6 +195,10 @@ public class GrowthReplay {
 			}
 		}
 
+	}
+
+	public GrowthReplayHttpClient getHttpClient() {
+		return httpClient;
 	}
 
 	public Logger getLogger() {
