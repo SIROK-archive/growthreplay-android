@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
+import com.growthbeat.CatchableThread;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
@@ -193,6 +194,23 @@ public class GrowthReplay {
 	static interface SavePictureHandler {
 
 		public void savePicture(byte[] data);
+
+	}
+
+	private static class Thread extends CatchableThread {
+
+		public Thread(Runnable runnable) {
+			super(runnable);
+		}
+
+		@Override
+		public void uncaughtException(java.lang.Thread thread, Throwable e) {
+			String message = "Uncaught Exception: " + e.getClass().getName();
+			if (e.getMessage() != null)
+				message += "; " + e.getMessage();
+			Logger.warning(message);
+			e.printStackTrace();
+		}
 
 	}
 
