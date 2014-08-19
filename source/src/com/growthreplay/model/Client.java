@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.growthbeat.utils.DeviceUtils;
-import com.growthreplay.GrowthReplay;
 
 public class Client extends Model {
 
@@ -41,23 +40,17 @@ public class Client extends Model {
 		super();
 	}
 
-	public Client authorize(Context context, int applicationId, String secret) {
+	public Client authorize(Context context, String clientId, String credentialId) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("applicationId", applicationId);
-		params.put("secret", secret);
-		params.put("clientId", getClientId() > 0 ? getClientId() : null);
-		params.put("token", getToken() != null ? getToken() : null);
+		params.put("clientId", clientId);
+		params.put("credentialId", credentialId);
 
 		params.put("os", "android");
 		params.put("network", DeviceUtils.connectedToWiFi(context) ? "wifi" : "carrier");
-		params.put("memory", DeviceUtils.getAvailableMemory(context));
-		params.put("version", com.growthbeat.utils.DeviceUtils.getOsVersion());
-		params.put("model", com.growthbeat.utils.DeviceUtils.getModel());
 
-		JSONObject jsonObject = post("v2", "authorize", params);
+		JSONObject jsonObject = post("v3", "records", params);
 		setJsonObject(jsonObject);
-		GrowthReplay.getInstance().getPreference().saveClient(this);
 
 		return this;
 	}

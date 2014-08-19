@@ -94,7 +94,7 @@ public class GrowthReplay {
 
 	}
 
-	private void authorize(String growthbeatClientId) {
+	private void authorize(final String growthbeatClientId) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -104,7 +104,7 @@ public class GrowthReplay {
 
 					Client client = new Client();
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
-					client = client.authorize(GrowthReplay.this.context, applicationId, credentialId);
+					client = client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", client.getClientId()));
 
 					final Configuration configuration = client.getClientConfiguration();
