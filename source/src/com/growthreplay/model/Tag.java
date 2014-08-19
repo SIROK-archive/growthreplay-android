@@ -22,15 +22,15 @@ public class Tag extends Model {
 		setValue(value);
 	}
 
-	public Tag send(long clientId, String token) {
+	public Tag send(String growthbeatClientId, String credentialId) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("clientId", clientId);
-		params.put("token", token);
+		params.put("clientId", growthbeatClientId);
+		params.put("credentialId", credentialId);
 		params.put("name", getName());
 		params.put("value", getValue());
 
-		JSONObject json = post("v1", "tag", params);
+		JSONObject json = post("v3", "tag", params);
 		setJson(json);
 
 		return this;

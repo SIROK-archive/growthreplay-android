@@ -135,7 +135,7 @@ public class GrowthReplay {
 			public void run() {
 				Tag tag = new Tag(name, value);
 				waitRegisterClient();
-				tag.send(client.getClientId(), client.getToken());
+				tag.send(client.getGrowthbeatClientId(), GrowthReplay.this.credentialId);
 			}
 		}).start();
 	}
