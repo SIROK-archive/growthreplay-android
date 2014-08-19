@@ -65,16 +65,16 @@ public class Client extends Model {
 		post("v1", "cancel", params);
 	}
 
-	public Picture savePicture(byte[] file, boolean recordedCheck) {
+	public Picture savePicture(String credentialId, byte[] file, boolean recordedCheck) {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("clientId", String.valueOf(getClientId())));
-		params.add(new BasicNameValuePair("token", getToken()));
+		params.add(new BasicNameValuePair("clientId", getGrowthbeatClientId()));
+		params.add(new BasicNameValuePair("credentialId", credentialId));
 		params.add(new BasicNameValuePair("recordScheduleToken", getRecordScheduleToken()));
 		params.add(new BasicNameValuePair("timestamp", String.valueOf(System.currentTimeMillis())));
 		params.add(new BasicNameValuePair("recordedCheck", String.valueOf(recordedCheck)));
 
-		JSONObject response = multipartPost("v2", "picture", params, file);
+		JSONObject response = multipartPost("v3", "picture", params, file);
 		if (response == null)
 			return null;
 

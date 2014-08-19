@@ -187,9 +187,9 @@ public class GrowthReplay {
 
 		Picture picture = null;
 		if (client.getClientConfiguration().getWheres() == null)
-			picture = this.client.savePicture(data, false);
+			picture = this.client.savePicture(this.credentialId, data, false);
 		else {
-			picture = this.client.savePicture(data, recordedCheck);
+			picture = this.client.savePicture(this.credentialId, data, recordedCheck);
 			recordedCheck = false;
 		}
 
