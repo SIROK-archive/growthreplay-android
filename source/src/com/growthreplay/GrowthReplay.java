@@ -3,6 +3,8 @@ package com.growthreplay;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -12,6 +14,7 @@ import android.os.Build;
 import com.growthbeat.CatchableThread;
 import com.growthbeat.GrowthbeatCore;
 import com.growthbeat.Logger;
+import com.growthbeat.Preference;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
@@ -23,6 +26,9 @@ public class GrowthReplay {
 
 	public static final String BASE_URL = "https://api.stg.growthreplay.com/";
 	private static final float SDK_VERSION = 0.3f;
+
+	private static final String PREFERENCE_FILE_NAME = "growthreplay-preferences";
+	private static final String PREFERENCE_CLIENT_KEY = "client";
 
 	private Semaphore semaphore = new Semaphore(1);
 	private CountDownLatch latch = new CountDownLatch(1);
@@ -40,7 +46,7 @@ public class GrowthReplay {
 	private final Preference preference = new Preference();
 
 	private Context context = null;
-	private int applicationId;
+	private String applicationId;
 	private String credentialId;
 	private Client client = null;
 	private int pictureLimit = 0;
@@ -52,27 +58,34 @@ public class GrowthReplay {
 		return instance;
 	}
 
-	public void initialize(Context context, String applicationId, String credentialId) {
+	public void initialize(final Context context, final String applicationId, final String credentialId) {
 
 		this.context = context.getApplicationContext();
-		this.recorder = new Recorder(this.context);
-		// TODO migrate to new API
-		this.applicationId = 0;
-		this.credentialId = credentialId;
-		// TODO set logger configuration
-		this.preference.setContext(context);
-		this.recorder.setHandler(pictureHandler);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			this.logger.warning("Growth Replay SDK required API Level 14 or more.");
 			return;
 		}
+
+		this.applicationId = applicationId;
+		this.credentialId = credentialId;
+		this.httpClient.setBaseUrl(BASE_URL);
+		this.preference.setContext(context);
+		this.preference.setFileName(PREFERENCE_FILE_NAME);
+
+		this.recorder = new Recorder(this.context);
+		this.recorder.setHandler(pictureHandler);
 
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 
-				com.growthbeat.model.Client growthbeatClient = GrowthbeatCore.getInstance().waitClient();
+				GrowthbeatCore.getInstance().initialize(context, applicationId, credentialId);
+
+				com.growthbeat.model.Client growthbeatClient = loadClient();
+				if (growthbeatClient == null)
+					growthbeatClient = GrowthbeatCore.getInstance().waitClient();
+
 				authorize(growthbeatClient.getId());
 
 			}
@@ -86,30 +99,25 @@ public class GrowthReplay {
 			@Override
 			public void run() {
 
-				// TODO use growthbeatClientId
-
-				Client refClient = GrowthReplay.this.preference.fetchClient();
-				if (refClient == null || (refClient != null && refClient.getApplicationId() != applicationId))
-					refClient = new Client();
-
 				try {
 					semaphore.acquire();
 
+					Client client = new Client();
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
-					refClient = refClient.authorize(GrowthReplay.this.context, applicationId, credentialId);
-					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", refClient.getClientId()));
+					client = client.authorize(GrowthReplay.this.context, applicationId, credentialId);
+					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", client.getClientId()));
 
-					final Configuration configuration = refClient.getClientConfiguration();
-					if (refClient.isRecorded()) {
-						pictureLimit = refClient.getClientConfiguration().getNumberOfRemaining();
+					final Configuration configuration = client.getClientConfiguration();
+					if (client.isRecorded()) {
+						pictureLimit = client.getClientConfiguration().getNumberOfRemaining();
 						GrowthReplay.this.logger.info("picture number of remaining " + pictureLimit);
 						recorder.startWidthConfiguration(configuration);
 					}
 
-					if (refClient.getStatus() == RecordStatus.already)
+					if (client.getStatus() == RecordStatus.already)
 						recordedCheck = false;
 
-					client = refClient;
+					GrowthReplay.this.client = client;
 					latch.countDown();
 
 				} catch (InterruptedException e) {
@@ -193,6 +201,16 @@ public class GrowthReplay {
 
 		if (!picture.isContinuation() || this.pictureLimit <= 0)
 			this.recorder.stop();
+
+	}
+
+	private com.growthbeat.model.Client loadClient() {
+
+		JSONObject json = this.preference.get(PREFERENCE_CLIENT_KEY);
+		if (json == null)
+			return null;
+
+		return new com.growthbeat.model.Client(json);
 
 	}
 
