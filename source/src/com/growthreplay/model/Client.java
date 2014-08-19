@@ -40,10 +40,10 @@ public class Client extends Model {
 		super();
 	}
 
-	public Client authorize(Context context, String clientId, String credentialId) {
+	public Client authorize(Context context, String growthbeatClientId, String credentialId) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("clientId", clientId);
+		params.put("clientId", growthbeatClientId);
 		params.put("credentialId", credentialId);
 
 		params.put("os", "android");
