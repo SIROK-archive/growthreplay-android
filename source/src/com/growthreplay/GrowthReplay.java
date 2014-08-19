@@ -24,7 +24,7 @@ import com.growthreplay.model.Tag;
 
 public class GrowthReplay {
 
-	public static final String BASE_URL = "https://api.stg.growthreplay.com/";
+	public static final String BASE_URL = "https://api.growthreplay.com/";
 	private static final float SDK_VERSION = 0.3f;
 
 	private static final String PREFERENCE_FILE_NAME = "growthreplay-preferences";
@@ -75,16 +75,19 @@ public class GrowthReplay {
 		this.recorder = new Recorder(this.context);
 		this.recorder.setHandler(pictureHandler);
 
+		GrowthbeatCore.getInstance().initialize(context, applicationId, credentialId);
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 
-				GrowthbeatCore.getInstance().initialize(context, applicationId, credentialId);
+				GrowthReplay.this.logger.debug("initializeGrowthbeat");
+				com.growthbeat.model.Client growthbeatClient = GrowthbeatCore.getInstance().waitClient();
+				com.growthbeat.model.Client storedClient = loadClient();
+				if (storedClient != null && !growthbeatClient.getId().equals(storedClient.getId()))
+					GrowthReplay.this.preference.remove(PREFERENCE_CLIENT_KEY);
 
-				com.growthbeat.model.Client growthbeatClient = loadClient();
-				if (growthbeatClient == null)
-					growthbeatClient = GrowthbeatCore.getInstance().waitClient();
+				GrowthReplay.this.logger.debug("gbcid: " + growthbeatClient.getId());
 
 				authorize(growthbeatClient.getId());
 
@@ -100,8 +103,6 @@ public class GrowthReplay {
 			public void run() {
 
 				try {
-					semaphore.acquire();
-
 					Client client = new Client();
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
 					client = client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
@@ -120,7 +121,6 @@ public class GrowthReplay {
 					GrowthReplay.this.client = client;
 					latch.countDown();
 
-				} catch (InterruptedException e) {
 				} finally {
 					GrowthReplay.this.semaphore.release();
 				}
