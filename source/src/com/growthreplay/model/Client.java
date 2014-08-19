@@ -21,6 +21,8 @@ public class Client extends Model {
 
 	private long clientId;
 
+	private String growthbeatClientId;
+
 	private String token;
 
 	private boolean recorded;
@@ -103,6 +105,14 @@ public class Client extends Model {
 		this.clientId = clientId;
 	}
 
+	public String getGrowthbeatClientId() {
+		return growthbeatClientId;
+	}
+
+	public void setGrowthbeatClientId(String growthbeatClientId) {
+		this.growthbeatClientId = growthbeatClientId;
+	}
+
 	public String getToken() {
 		return token;
 	}
@@ -153,6 +163,8 @@ public class Client extends Model {
 				setApplicationId(jsonObject.getInt("applicationId"));
 			if (jsonObject.has("clientId"))
 				setClientId(jsonObject.getLong("clientId"));
+			if (jsonObject.has("growthbeatClientId"))
+				setGrowthbeatClientId(jsonObject.getString("growthbeatClientId"));
 			if (jsonObject.has("token") && !jsonObject.isNull("token"))
 				setToken(jsonObject.getString("token"));
 			if (jsonObject.has("recorded") && !jsonObject.isNull("recorded"))
@@ -176,6 +188,7 @@ public class Client extends Model {
 		try {
 			jsonObject.put("applicationId", getApplicationId());
 			jsonObject.put("clientId", getClientId());
+			jsonObject.put("growthbeatClientId", getGrowthbeatClientId());
 			jsonObject.put("token", getToken());
 		} catch (JSONException e) {
 		}
