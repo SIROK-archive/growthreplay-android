@@ -87,8 +87,6 @@ public class GrowthReplay {
 				if (storedClient != null && !growthbeatClient.getId().equals(storedClient.getId()))
 					GrowthReplay.this.preference.remove(PREFERENCE_CLIENT_KEY);
 
-				GrowthReplay.this.logger.debug("gbcid: " + growthbeatClient.getId());
-
 				authorize(growthbeatClient.getId());
 
 			}
@@ -104,7 +102,7 @@ public class GrowthReplay {
 
 				try {
 					Client client = new Client();
-					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%d", applicationId));
+					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%s", applicationId));
 					client = client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", client.getClientId()));
 
