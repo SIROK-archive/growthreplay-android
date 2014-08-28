@@ -12,7 +12,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		GrowthReplay.getInstance().initialize(getApplicationContext(), "dy6VlRMnN3juhW9L", "NuvkVhQtRDG2nrNeDzHXzZO5c6j0Xu5t");
+		GrowthReplay.getInstance().initialize(getApplicationContext(), "1RE2wSOp6V5qpq5O", "j4Gnk3tWQMV31QPnZ1GwYuJRkyPDkDcK");
 	}
 
 	@Override
