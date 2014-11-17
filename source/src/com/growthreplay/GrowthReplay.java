@@ -186,7 +186,7 @@ public class GrowthReplay {
 		} else
 			this.logger.debug("fail save image");
 
-		if (!picture.isContinuation() || this.pictureLimit <= 0)
+		if (!picture.getContinuation() || this.pictureLimit <= 0)
 			this.recorder.stop();
 
 	}

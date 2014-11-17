@@ -20,7 +20,7 @@ public class Picture extends Model {
 		setJsonObject(jsonObject);
 	}
 
-	public boolean isContinuation() {
+	public boolean getContinuation() {
 		return continuation;
 	}
 
@@ -64,8 +64,18 @@ public class Picture extends Model {
 
 	@Override
 	public JSONObject getJsonObject() {
-		// TODO Auto-generated method stub
-		return null;
+
+		JSONObject jsonObject = new JSONObject();
+
+		try {
+			jsonObject.put("continuation", getContinuation());
+			jsonObject.put("status", getStatus());
+			jsonObject.put("token", getRecordedClient());
+		} catch (JSONException e) {
+		}
+
+		return jsonObject;
+
 	}
 
 }
