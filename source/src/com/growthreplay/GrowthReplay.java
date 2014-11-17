@@ -15,12 +15,12 @@ import com.growthbeat.CatchableThread;
 import com.growthbeat.GrowthbeatCore;
 import com.growthbeat.Logger;
 import com.growthbeat.Preference;
+import com.growthbeat.analytics.GrowthAnalytics;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
 import com.growthreplay.model.GrowthReplayHttpClient;
 import com.growthreplay.model.Picture;
-import com.growthreplay.model.Tag;
 
 public class GrowthReplay {
 
@@ -126,15 +126,8 @@ public class GrowthReplay {
 		}).start();
 	}
 
-	public void setTag(final String name, final String value) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Tag tag = new Tag(name, value);
-				waitRegisterClient();
-				tag.send(client.getGrowthbeatClientId(), GrowthReplay.this.credentialId);
-			}
-		}).start();
+	public void setTag(final String tagId, final String value) {
+		GrowthAnalytics.getInstance().setTag(tagId, value);
 	}
 
 	public void setDeviceTags() {
