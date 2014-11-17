@@ -29,6 +29,11 @@ public class GrowthReplayHttpClient extends BaseHttpClient {
 		super();
 	}
 
+	public GrowthReplayHttpClient(String baseUrl) {
+		this();
+		setBaseUrl(baseUrl);
+	}
+
 	public JSONObject post(String api, Map<String, Object> params) {
 
 		JSONObject body = new JSONObject();

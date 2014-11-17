@@ -24,10 +24,17 @@ import com.growthreplay.model.Picture;
 
 public class GrowthReplay {
 
-	public static final String BASE_URL = "https://api.growthreplay.com/";
 	private static final float SDK_VERSION = 0.3f;
 
-	private static final String PREFERENCE_FILE_NAME = "growthreplay-preferences";
+	public static final String LOGGER_DEFAULT_TAG = "GrowthReplay";
+	public static final String HTTP_CLIENT_DEFAULT_BASE_URL = "https://api.growthreplay.com/";
+	public static final String PREFERENCE_DEFAULT_FILE_NAME = "growthreplay-preferences";
+
+	private static GrowthReplay instance = new GrowthReplay();
+	private final Logger logger = new Logger(LOGGER_DEFAULT_TAG);
+	private final GrowthReplayHttpClient httpClient = new GrowthReplayHttpClient(HTTP_CLIENT_DEFAULT_BASE_URL);
+	private final Preference preference = new Preference(PREFERENCE_DEFAULT_FILE_NAME);
+
 	private static final String PREFERENCE_CLIENT_KEY = "client";
 
 	private Semaphore semaphore = new Semaphore(1);
@@ -41,18 +48,12 @@ public class GrowthReplay {
 		}
 	};
 
-	private final GrowthReplayHttpClient httpClient = new GrowthReplayHttpClient();
-	private final Logger logger = new Logger("GrowthReplay");
-	private final Preference preference = new Preference();
-
 	private Context context = null;
 	private String applicationId;
 	private String credentialId;
 	private Client client = null;
 	private int pictureLimit = 0;
 	private boolean recordedCheck = true;
-
-	private static GrowthReplay instance = new GrowthReplay();
 
 	public static GrowthReplay getInstance() {
 		return instance;
@@ -68,9 +69,7 @@ public class GrowthReplay {
 
 		this.applicationId = applicationId;
 		this.credentialId = credentialId;
-		this.httpClient.setBaseUrl(BASE_URL);
 		this.preference.setContext(context);
-		this.preference.setFileName(PREFERENCE_FILE_NAME);
 
 		this.recorder = new Recorder(this.context);
 		this.recorder.setHandler(pictureHandler);
