@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.growthbeat.model.Model;
+import com.growthreplay.GrowthReplay;
 
 public class Event extends Model {
 
@@ -21,22 +22,21 @@ public class Event extends Model {
 	public Event() {
 	}
 
-	public Event(String value) {
-		setValue(value);
+	public Event(JSONObject jsonObject) {
+		setJsonObject(jsonObject);
 	}
 
-	public Event send(long clientId, String token, String name) {
+	public static Event send(long clientId, String token, String name, String value) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("clientId", clientId);
 		params.put("token", token);
 		params.put("name", name);
-		params.put("value", getValue());
+		params.put("value", value);
 
-		JSONObject json = post("v1", "event", params);
-		setJson(json);
+		JSONObject json = GrowthReplay.getInstance().getHttpClient().post("v1/event", params);
 
-		return this;
+		return new Event(json);
 	}
 
 	public int getGoalId() {
