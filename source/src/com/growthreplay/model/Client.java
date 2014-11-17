@@ -14,6 +14,7 @@ import android.content.Context;
 
 import com.growthbeat.model.Model;
 import com.growthbeat.utils.DeviceUtils;
+import com.growthreplay.GrowthReplay;
 
 public class Client extends Model {
 
@@ -41,7 +42,11 @@ public class Client extends Model {
 		super();
 	}
 
-	public Client authorize(Context context, String growthbeatClientId, String credentialId) {
+	private Client(JSONObject jsonObject) {
+		setJsonObject(jsonObject);
+	}
+
+	public static Client authorize(Context context, String growthbeatClientId, String credentialId) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("clientId", growthbeatClientId);
@@ -50,10 +55,9 @@ public class Client extends Model {
 		params.put("os", "android");
 		params.put("network", DeviceUtils.connectedToWiFi(context) ? "wifi" : "carrier");
 
-		JSONObject jsonObject = post("v3", "records", params);
-		setJsonObject(jsonObject);
+		JSONObject jsonObject = GrowthReplay.getInstance().getHttpClient().post("v3/records", params);
 
-		return this;
+		return new Client(jsonObject);
 	}
 
 	public void cancel() {
@@ -63,19 +67,19 @@ public class Client extends Model {
 		params.put("token", getToken());
 		params.put("recordScheduleToken", getRecordScheduleToken());
 
-		post("v1", "cancel", params);
+		GrowthReplay.getInstance().getHttpClient().post("v1/cancel", params);
 	}
 
-	public Picture savePicture(String credentialId, byte[] file, boolean recordedCheck) {
+	public static Picture savePicture(String clientId, String credentialId, String recordScheduleToken, byte[] file, boolean recordedCheck) {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("clientId", getGrowthbeatClientId()));
+		params.add(new BasicNameValuePair("clientId", clientId));
 		params.add(new BasicNameValuePair("credentialId", credentialId));
-		params.add(new BasicNameValuePair("recordScheduleToken", getRecordScheduleToken()));
+		params.add(new BasicNameValuePair("recordScheduleToken", recordScheduleToken));
 		params.add(new BasicNameValuePair("timestamp", String.valueOf(System.currentTimeMillis())));
 		params.add(new BasicNameValuePair("recordedCheck", String.valueOf(recordedCheck)));
 
-		JSONObject response = multipartPost("v3", "picture", params, file);
+		JSONObject response = GrowthReplay.getInstance().getHttpClient().multipartPost("v3/picture", params, file);
 		if (response == null)
 			return null;
 
