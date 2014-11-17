@@ -16,10 +16,10 @@ import com.growthbeat.GrowthbeatCore;
 import com.growthbeat.Logger;
 import com.growthbeat.Preference;
 import com.growthbeat.analytics.GrowthAnalytics;
+import com.growthreplay.http.GrowthReplayHttpClient;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
 import com.growthreplay.model.Configuration;
-import com.growthreplay.model.GrowthReplayHttpClient;
 import com.growthreplay.model.Picture;
 
 public class GrowthReplay {

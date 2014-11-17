@@ -3,7 +3,9 @@ package com.growthreplay.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Picture {
+import com.growthbeat.model.Model;
+
+public class Picture extends Model {
 
 	private boolean continuation;
 
@@ -42,6 +44,7 @@ public class Picture {
 		this.recordedClient = recordedClient;
 	}
 
+	@Override
 	public void setJsonObject(JSONObject jsonObject) {
 
 		if (jsonObject == null)
@@ -57,6 +60,12 @@ public class Picture {
 		} catch (JSONException e) {
 		}
 
+	}
+
+	@Override
+	public JSONObject getJsonObject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

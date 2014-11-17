@@ -151,6 +151,7 @@ public class Client extends Model {
 		this.clientConfiguration = clientConfiguration;
 	}
 
+	@Override
 	public void setJsonObject(JSONObject jsonObject) {
 
 		if (jsonObject == null)
@@ -179,6 +180,7 @@ public class Client extends Model {
 
 	}
 
+	@Override
 	public JSONObject getJsonObject() {
 
 		JSONObject jsonObject = new JSONObject();

@@ -1,4 +1,4 @@
-package com.growthreplay.model;
+package com.growthreplay.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
