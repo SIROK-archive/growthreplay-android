@@ -101,9 +101,8 @@ public class GrowthReplay {
 			public void run() {
 
 				try {
-					Client client = new Client();
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%s", applicationId));
-					client = client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
+					Client client = Client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", client.getClientId()));
 
 					final Configuration configuration = client.getClientConfiguration();
@@ -185,9 +184,11 @@ public class GrowthReplay {
 
 		Picture picture = null;
 		if (client.getClientConfiguration().getWheres() == null)
-			picture = this.client.savePicture(this.credentialId, data, false);
+			picture = Client.savePicture(this.client.getGrowthbeatClientId(), this.credentialId, this.client.getRecordScheduleToken(),
+					data, false);
 		else {
-			picture = this.client.savePicture(this.credentialId, data, recordedCheck);
+			picture = Client.savePicture(this.client.getGrowthbeatClientId(), this.credentialId, this.client.getRecordScheduleToken(),
+					data, recordedCheck);
 			recordedCheck = false;
 		}
 
