@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.growthbeat.model.Model;
+import com.growthreplay.GrowthReplay;
 
 public class Tag extends Model {
 
@@ -24,18 +25,21 @@ public class Tag extends Model {
 		setValue(value);
 	}
 
-	public Tag send(String growthbeatClientId, String credentialId) {
+	private Tag(JSONObject jsonObject) {
+		setJsonObject(jsonObject);
+	}
+
+	public static Tag send(String growthbeatClientId, String credentialId, String name, String value) {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("clientId", growthbeatClientId);
 		params.put("credentialId", credentialId);
-		params.put("name", getName());
-		params.put("value", getValue());
+		params.put("name", name);
+		params.put("value", value);
 
-		JSONObject json = post("v3", "tag", params);
-		setJson(json);
+		JSONObject json = GrowthReplay.getInstance().getHttpClient().post("v3/tag", params);
 
-		return this;
+		return new Tag(json);
 	}
 
 	public int getTagId() {
