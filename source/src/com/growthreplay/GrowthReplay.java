@@ -42,7 +42,7 @@ public class GrowthReplay {
 	};
 
 	private final GrowthReplayHttpClient httpClient = new GrowthReplayHttpClient();
-	private final Logger logger = new Logger("Growth Replay");
+	private final Logger logger = new Logger("GrowthReplay");
 	private final Preference preference = new Preference();
 
 	private Context context = null;
