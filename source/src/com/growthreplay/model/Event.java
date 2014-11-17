@@ -6,6 +6,8 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.growthbeat.model.Model;
+
 public class Event extends Model {
 
 	private int goalId;
@@ -69,7 +71,8 @@ public class Event extends Model {
 		this.value = value;
 	}
 
-	private void setJson(JSONObject json) {
+	@Override
+	public void setJsonObject(JSONObject json) {
 
 		if (json == null)
 			return;
@@ -86,6 +89,11 @@ public class Event extends Model {
 		} catch (JSONException e) {
 		}
 
+	}
+
+	@Override
+	public JSONObject getJsonObject() {
+		return null;
 	}
 
 }

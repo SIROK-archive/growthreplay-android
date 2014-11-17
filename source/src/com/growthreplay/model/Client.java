@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.growthbeat.model.Model;
 import com.growthbeat.utils.DeviceUtils;
 
 public class Client extends Model {
