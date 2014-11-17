@@ -1,7 +1,6 @@
 package com.growthreplay;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +27,6 @@ class Recorder {
 	private Timer timer;
 	private boolean continuation = true;
 	private boolean isRec = false;
-	private String spot = null;
 
 	private SavePictureHandler handler;
 
@@ -69,7 +67,7 @@ class Recorder {
 	}
 
 	private void takeScreenshot() {
-		if (activity == null || !activity.hasWindowFocus() || activity.isFinishing() || !checkSpot())
+		if (activity == null || !activity.hasWindowFocus() || activity.isFinishing())
 			return;
 
 		if (!continuation) {
@@ -113,21 +111,6 @@ class Recorder {
 
 	}
 
-	private boolean checkSpot() {
-
-		List<String> wheres = this.configuration.getWheres();
-		if (wheres != null) {
-			for (String spot : wheres) {
-				if (spot.equals(this.spot))
-					return true;
-			}
-			return false;
-		}
-
-		return true;
-
-	}
-
 	public void send(Bitmap bitmap) {
 		if (continuation) {
 			if (DeviceUtils.connectedToWiFi(context)) {
@@ -166,10 +149,6 @@ class Recorder {
 
 	public void setRec(boolean isRec) {
 		this.isRec = isRec;
-	}
-
-	public void setSpot(String spot) {
-		this.spot = spot;
 	}
 
 }

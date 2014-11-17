@@ -157,11 +157,6 @@ public class GrowthReplay {
 			this.recorder.setRec(false);
 	}
 
-	public void setSpot(String spot) {
-		if (this.recorder != null)
-			this.recorder.setSpot(spot);
-	}
-
 	private void sendPicture(byte[] data) {
 
 		if (this.pictureLimit <= 0)
@@ -193,17 +188,6 @@ public class GrowthReplay {
 
 	public Context getContext() {
 		return context;
-	}
-
-	private void waitRegisterClient() {
-
-		if (this.client == null) {
-			try {
-				latch.await();
-			} catch (InterruptedException e) {
-			}
-		}
-
 	}
 
 	public GrowthReplayHttpClient getHttpClient() {
