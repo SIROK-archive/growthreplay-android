@@ -46,6 +46,32 @@ public class Client extends Model {
 		setJsonObject(jsonObject);
 	}
 
+	public static Client load() {
+
+		JSONObject clientJsonObject = GrowthReplay.getInstance().getPreference().get(Client.class.getName());
+		if (clientJsonObject == null)
+			return null;
+
+		Client client = new Client();
+		client.setJsonObject(clientJsonObject);
+
+		return client;
+
+	}
+
+	public static synchronized void save(Client client) {
+
+		if (client == null)
+			throw new IllegalArgumentException("Argument client cannot be null.");
+
+		GrowthReplay.getInstance().getPreference().save(Client.class.getName(), client.getJsonObject());
+
+	}
+
+	public static void clear() {
+		GrowthReplay.getInstance().getPreference().remove(Client.class.getName());
+	}
+
 	public static Client authorize(Context context, String growthbeatClientId, String credentialId) {
 
 		Map<String, Object> params = new HashMap<String, Object>();

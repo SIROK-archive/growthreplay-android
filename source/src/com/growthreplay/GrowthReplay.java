@@ -3,8 +3,6 @@ package com.growthreplay;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -34,8 +32,6 @@ public class GrowthReplay {
 	private final Logger logger = new Logger(LOGGER_DEFAULT_TAG);
 	private final GrowthReplayHttpClient httpClient = new GrowthReplayHttpClient(HTTP_CLIENT_DEFAULT_BASE_URL);
 	private final Preference preference = new Preference(PREFERENCE_DEFAULT_FILE_NAME);
-
-	private static final String PREFERENCE_CLIENT_KEY = "client";
 
 	private Semaphore semaphore = new Semaphore(1);
 	private CountDownLatch latch = new CountDownLatch(1);
@@ -82,9 +78,9 @@ public class GrowthReplay {
 
 				GrowthReplay.this.logger.debug("initializeGrowthbeat");
 				com.growthbeat.model.Client growthbeatClient = GrowthbeatCore.getInstance().waitClient();
-				com.growthbeat.model.Client storedClient = loadClient();
-				if (storedClient != null && !growthbeatClient.getId().equals(storedClient.getId()))
-					GrowthReplay.this.preference.remove(PREFERENCE_CLIENT_KEY);
+				Client storedClient = Client.load();
+				if (storedClient != null && !growthbeatClient.getId().equals(storedClient.getGrowthbeatClientId()))
+					Client.clear();
 
 				authorize(growthbeatClient.getId());
 
@@ -192,16 +188,6 @@ public class GrowthReplay {
 
 		if (!picture.isContinuation() || this.pictureLimit <= 0)
 			this.recorder.stop();
-
-	}
-
-	private com.growthbeat.model.Client loadClient() {
-
-		JSONObject json = this.preference.get(PREFERENCE_CLIENT_KEY);
-		if (json == null)
-			return null;
-
-		return new com.growthbeat.model.Client(json);
 
 	}
 
