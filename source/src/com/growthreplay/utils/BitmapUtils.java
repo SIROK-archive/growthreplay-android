@@ -6,7 +6,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Matrix;
 
-import com.growthreplay.GrowthReplay;
+import com.growthbeat.GrowthbeatCore;
 
 public class BitmapUtils {
 
@@ -36,7 +36,7 @@ public class BitmapUtils {
 	}
 
 	public static float resizeScale(int width, int height, float configurationScale) {
-		Configuration config = GrowthReplay.getInstance().getContext().getResources().getConfiguration();
+		Configuration config = GrowthbeatCore.getInstance().getContext().getResources().getConfiguration();
 		int baseWidth = 360;
 		int baseHeight = 480;
 		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {

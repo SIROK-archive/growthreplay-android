@@ -44,7 +44,6 @@ public class GrowthReplay {
 		}
 	};
 
-	private Context context = null;
 	private String applicationId;
 	private String credentialId;
 	private Client client = null;
@@ -57,7 +56,8 @@ public class GrowthReplay {
 
 	public void initialize(final Context context, final String applicationId, final String credentialId) {
 
-		this.context = context.getApplicationContext();
+		GrowthbeatCore.getInstance().initialize(context, applicationId, credentialId);
+
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			this.logger.warning("Growth Replay SDK required API Level 14 or more.");
 			return;
@@ -67,10 +67,9 @@ public class GrowthReplay {
 		this.credentialId = credentialId;
 		this.preference.setContext(context);
 
-		this.recorder = new Recorder(this.context);
+		this.recorder = new Recorder(GrowthbeatCore.getInstance().getContext());
 		this.recorder.setHandler(pictureHandler);
 
-		GrowthbeatCore.getInstance().initialize(context, applicationId, credentialId);
 		new Thread(new Runnable() {
 
 			@Override
@@ -97,7 +96,7 @@ public class GrowthReplay {
 
 				try {
 					GrowthReplay.this.logger.info(String.format("client authorize. applicationId:%s", applicationId));
-					Client client = Client.authorize(GrowthReplay.this.context, growthbeatClientId, credentialId);
+					Client client = Client.authorize(GrowthbeatCore.getInstance().getContext(), growthbeatClientId, credentialId);
 					GrowthReplay.this.logger.info(String.format("client success (clientId: %d)", client.getClientId()));
 
 					final Configuration configuration = client.getClientConfiguration();
@@ -131,6 +130,7 @@ public class GrowthReplay {
 		setTag("os", "android");
 		setTag("sdkVersion", String.valueOf(SDK_VERSION));
 
+		Context context = GrowthbeatCore.getInstance().getContext();
 		if (context != null) {
 			try {
 				PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -184,10 +184,6 @@ public class GrowthReplay {
 		if (!picture.getContinuation() || this.pictureLimit <= 0)
 			this.recorder.stop();
 
-	}
-
-	public Context getContext() {
-		return context;
 	}
 
 	public GrowthReplayHttpClient getHttpClient() {
