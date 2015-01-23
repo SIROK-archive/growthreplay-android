@@ -5,15 +5,12 @@ import java.util.concurrent.Semaphore;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
 import com.growthbeat.CatchableThread;
 import com.growthbeat.GrowthbeatCore;
 import com.growthbeat.Logger;
 import com.growthbeat.Preference;
-import com.growthbeat.analytics.GrowthAnalytics;
 import com.growthreplay.http.GrowthReplayHttpClient;
 import com.growthreplay.model.Client;
 import com.growthreplay.model.Client.RecordStatus;
@@ -21,8 +18,6 @@ import com.growthreplay.model.Configuration;
 import com.growthreplay.model.Picture;
 
 public class GrowthReplay {
-
-	private static final float SDK_VERSION = 0.3f;
 
 	public static final String LOGGER_DEFAULT_TAG = "GrowthReplay";
 	public static final String HTTP_CLIENT_DEFAULT_BASE_URL = "https://api.growthreplay.com/";
@@ -118,27 +113,6 @@ public class GrowthReplay {
 
 			}
 		}).start();
-	}
-
-	public void setTag(final String tagId, final String value) {
-		GrowthAnalytics.getInstance().setTag(tagId, value);
-	}
-
-	public void setDeviceTags() {
-		setTag("deviceModel", com.growthbeat.utils.DeviceUtils.getModel());
-		setTag("deviceVersion", com.growthbeat.utils.DeviceUtils.getOsVersion());
-		setTag("os", "android");
-		setTag("sdkVersion", String.valueOf(SDK_VERSION));
-
-		Context context = GrowthbeatCore.getInstance().getContext();
-		if (context != null) {
-			try {
-				PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-				GrowthReplay.getInstance().setTag("appVersion", pInfo.versionName);
-			} catch (NameNotFoundException e) {
-			}
-		}
-
 	}
 
 	public void setActivity(final Activity activity) {
