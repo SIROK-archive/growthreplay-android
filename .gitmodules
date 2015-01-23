@@ -3,4 +3,4 @@
 	url = https://github.com/SIROK/growthbeat-core-android.git
 [submodule "submodules/growthanalytics-android"]
 	path = submodules/growthanalytics-android
-	url = git@github.com:SIROK/growthanalytics-android.git
+	url = https://github.com/SIROK/growthanalytics-android.git
